@@ -1,37 +1,35 @@
-import 'dart:io';
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:nice_button/NiceButton.dart';
-import 'package:signup/models/ImageUploadModel.dart';
+import 'package:signup/main_screen.dart';
 import 'package:signup/services/PostAdCreation.dart';
-
 import '../utils.dart';
-
-
-
 
 
 class PostSecondScreen extends StatefulWidget{
 
-
-
   @override
   _PostSecondScreenState createState() => new _PostSecondScreenState();
 
-  String title;String desc; int price; String City;String AvailDays; String time; String unitArea; String location; String purpose,propertySize;
+  String title;
+  String desc;
+  int price;
+  String City;
+  String AvailDays;
+  String time;
+  String unitArea;
+  String location;
+  String purpose, propertySize;
 
 
-  PostSecondScreen(this.title,this.desc,this.price,this.City,this.location,this.purpose,this.unitArea,this.AvailDays,this.time,this.propertySize,{Key key}): super(key: key);
-
-
-
-
+  PostSecondScreen(this.title, this.desc, this.price, this.City, this.location,
+      this.purpose, this.unitArea, this.AvailDays, this.time, this.propertySize,
+      {Key key})
+      : super(key: key);
 }
 
 
@@ -39,17 +37,14 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
 
   List<Asset> images = List<Asset>();
   List<String> imageUrls = <String>[];
-
+  bool isAdmin = false;
 
   String _error = 'No Error Dectected';
   bool isUploading = false;
   List<NetworkImage> _listOfImages = <NetworkImage>[];
 
-
   //List<Object> images = List<Object>();
   //Future<File> imageFile;
-
-
 
   PostAddFirebase createpost = PostAddFirebase();
 
@@ -93,8 +88,6 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
   String _selectedpropertyType;
   String _selectedpropertyDetailType;
 
-  String _btn1SelectedVal;
-  String _btn2SelectedVal;
 
 
   int value = 0;
@@ -173,13 +166,18 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
     return deflt2;
   }
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  void showInSnackBar(String value) {
+    _scaffoldKey.currentState.showSnackBar(
+        new SnackBar(content: new Text(value)));
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
 //      backgroundColor: Colors.grey[600],
+      key: _scaffoldKey,
       body: Container(
 //        decoration: BoxDecoration(
 //          image: DecorationImage(
@@ -229,8 +227,6 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
 
 
 
-
-
                 UploadPropertyImages(),
 
               //ReadImagesFromFirebaseStorage(),
@@ -238,19 +234,49 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
               //_showSelectImages(),
               //_showAddImages(),
               Container(
+
                 margin: EdgeInsets.only(left: 7),
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: <Widget>[
+                    //buildGridView(),
+                    Container(
+//                      decoration: BoxDecoration(
+//                          color: Colors.blue[200],
+//                          border: Border.all(
+//                              color: Colors.pink[800],// set border color
+//                              width: 3.0),   // set border width
+//                          borderRadius: BorderRadius.all(
+//                              Radius.circular(10.0)), // set rounded corner radius
+//                        //  boxShadow: [BoxShadow(blurRadius: 10,color: Colors.black,offset: Offset(1,3))]// make rounded corner of border
+//                      ),
+                      width: 200,
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height / 4,
+                      //color: Colors.green,
+                      child: buildGridView(),
+                    ),
                     RaisedButton(
                       child: Text("Submit"),
                       onPressed: () {
-                        if(_key.currentState.validate()){
+                        if (_key.currentState.validate()) {
                           _key.currentState.save();
-                          showAlert("Post is Uploading Please Wait ");
+                          showAlert("Post is Uploading. Please Wait ");
                           runMyFutureGetImagesReference();
-
-
+                          if (isAdmin) {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) =>
+                                    MainScreen(isAgent: true,)));
+                          }
+                          else {
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (context) =>
+                                    MainScreen(isAgent: false,)));
+                          }
+//                          return MainScreen(isAdmin: true,);
+                          //       Navigator.pushNamed(context, '/mainScreen');
 
                         }
 
@@ -260,7 +286,7 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
                           });
                         }
 
-
+                        //  Navigator.pushNamed(context, '/mainScreen');
 //                      setState(() {
 //                        isButtonPressed7 = !isButtonPressed7;
 //                      });
@@ -298,6 +324,7 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
         }
         else {
           createpost.CreatePostAddHomes(
+
               widget.title,
               widget.desc,
               widget.price,
@@ -386,7 +413,7 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
     }
 
     showAlert("uploaded successfully");
-
+    Navigator.of(context).pop();
 
   }
 
@@ -504,39 +531,72 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
     );
   }
 
-
+  Widget buildGridView() {
+    return GridView.count(
+      crossAxisCount: 3,
+      children: List.generate(images.length, (index) {
+        Asset asset = images[index];
+        print(asset.getByteData(quality: 100));
+        return Padding(
+          padding: EdgeInsets.all(8.0),
+//          child: ThreeDContainer(
+//            backgroundColor: MultiPickerApp.brighter,
+//            backgroundDarkerColor: MultiPickerApp.brighter,
+//            height: 50,
+//            width: 50,
+//            borderDarkerColor: MultiPickerApp.pauseButton,
+//            borderColor: MultiPickerApp.pauseButtonDarker,
+          child: ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.blueAccent, width: 2)
+              ),
+              child: AssetThumb(
+                asset: asset,
+                width: 300,
+                height: 300,
+              ),
+            ),
+          ),
+          //  ),
+        );
+      }),
+    );
+  }
 
   Widget UploadPropertyImages() {
-        return Container(
+    return Container(
         child: Center(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(10,10,10,10),
-                    child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                    NiceButton(
-                    width: 250,
-                    elevation: 8.0,
-                    radius: 52.0,
-                    text: "Select Images",
-                    background:Colors.blueAccent,
-                    onPressed:() async {
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  NiceButton(
+                      width: 250,
+                      elevation: 8.0,
+                      radius: 52.0,
+                      text: "Select Images",
+                      background: Colors.blueAccent,
+                      onPressed: () async {
+                        List<Asset> asst = await loadAssets();
+                        if (asst.length == 0) {
+                          showAlert("No images selected");
+                        }
+                        SizedBox(height: 10,);
 
-                      List<Asset> asst = await loadAssets();
-                      if(asst.length==0){
-
-                        showAlert("No images selected");
-
-
+                        showInSnackBar('Images Successfully loaded');
+                        //                 SnackBar snackbar = SnackBar(content: Text('Please wait, we are uploading'));
+                        //_scaffoldKey.currentState.showSnackBar(new SnackBar(content: new Text(value)));
                       }
+                    //print(asst.length.toString() + "load asset completed");
 
-                     print(asst.length.toString() + "load asset completed");
-
-                    }
-                    ),
+                    // }
+                  ),
 
 
-               /* imageUrls != null ? Container(
+                  /* imageUrls != null ? Container(
                     height: 200,
                     padding: EdgeInsets.all(16.0),
                     child: GridView.builder(
@@ -694,6 +754,8 @@ Widget ReadImagesFromFirebaseStorage(){
           selectCircleStrokeColor: "#000000",
         ),
       );
+
+      showInSnackBar("loading images");
       print(resultList.length);
       print((await resultList[0].getThumbByteData(122, 100)));
       print((await resultList[0].getByteData()));

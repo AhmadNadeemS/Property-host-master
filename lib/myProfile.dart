@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:signup/states/currentUser.dart';
 
 class MyProfile extends StatefulWidget {
   final bool isAdmin;
@@ -42,25 +41,34 @@ class _MyProfileState extends State<MyProfile> {
     });
   }
 
-//  Stream<DocumentSnapshot> provideDocumentFieldStream() {
-//    return Firestore.instance
-//        .collection('users').document("6ztvDsMZl4TiYeTjXcYLlNy0YhX2")
-//        .snapshots();
-//  }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
           title: Text("List of Agents"),
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(begin: Alignment.bottomRight, colors: [
+                Colors.black.withOpacity(.4),
+                Colors.black.withOpacity(.2),
+              ]),
+//                gradient: LinearGradient(
+//                 //
+//                   colors: [Colors.deepPurple, Color(0xff2470c7)], stops: [0.5, 1.0],
+//                  // colors: [Colors.deepPurple, Colors.purple], stops: [0.5, 1.0],
+//                ),
+            ),
+          ),
         ),
-        body: user!= null ? Container(
+        body: user != null ? Container(
           child: StreamBuilder(
-            stream: Firestore.instance.collection('users').where("role", isEqualTo: "admin").snapshots(),
+            stream: Firestore.instance.collection('users').where(
+                "User Type", isEqualTo: "Agent").snapshots(),
 
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasData) {
-
                 return ListView.builder(
 
                   itemCount: snapshot.data.documents.length,
@@ -69,8 +77,12 @@ class _MyProfileState extends State<MyProfile> {
                     return Column(
                       children: <Widget>[
                         Container(
-                          width: MediaQuery.of(context).size.width,
-                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                          width: MediaQuery
+                              .of(context)
+                              .size
+                              .width,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 0),
                           child: Card(
                             elevation: 5,
                             shape: RoundedRectangleBorder(
@@ -78,14 +90,20 @@ class _MyProfileState extends State<MyProfile> {
                             ),
                             child: Container(
                               decoration: BoxDecoration(color: Colors.white),
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                              width: MediaQuery
+                                  .of(context)
+                                  .size
+                                  .width,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment: MainAxisAlignment
+                                    .spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start,
                                     children: <Widget>[
                                       Container(
                                         width: 55.0,
@@ -97,7 +115,9 @@ class _MyProfileState extends State<MyProfile> {
                                           //foregroundColor: Colors.green,
                                           //backgroundImage: AssetImage('assets/1.jpg'),
                                           //backgroundImage: NetworkImage(snapshot.data['image']),
-                                            backgroundImage: NetworkImage(snapshot.data.documents.elementAt(index)['image']),
+                                          backgroundImage: NetworkImage(
+                                              snapshot.data.documents.elementAt(
+                                                  index)['image']),
 //                                          Image.network(snapshot.data.documents
 //                                              .elementAt(index)['image']),
 //                                          //Image.network(snapshot.data['url'],),
@@ -112,10 +132,12 @@ class _MyProfileState extends State<MyProfile> {
                                         //mainAxisAlignment: MainAxisAlignment.end,
                                         children: <Widget>[
                                           Padding(
-                                            padding: const EdgeInsets.only(top: 15, left: 5),
+                                            padding: const EdgeInsets.only(
+                                                top: 15, left: 5),
                                             child: Text(
-                                              snapshot.data.documents.elementAt(index)['displayName'],
-                                           //   snapshot.data.documents.elementAt(index)['displayName'],
+                                              snapshot.data.documents.elementAt(
+                                                  index)['displayName'],
+                                              //   snapshot.data.documents.elementAt(index)['displayName'],
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 14,
@@ -135,10 +157,14 @@ class _MyProfileState extends State<MyProfile> {
                                         color: Colors.grey[800],
                                         onPressed: () {
 //                                          Navigator.pushNamed(context, '/myProfileFinal');
-                                          data= snapshot.data.documents.elementAt(index)['uid'];
-                                        Navigator.of(context).pushNamed('/myProfileFinal',arguments: data);
+                                          data =
+                                          snapshot.data.documents.elementAt(
+                                              index)['User Type'];
+                                          Navigator.of(context).pushNamed(
+                                              '/myProfileFinal',
+                                              arguments: data);
                                           //Navigator.of(context).pushNamed(CurrentUser(),arguments: data);
-                                        print(data);
+                                          print(data);
                                         },
                                         child: Text('Visit Profile',
                                             style: TextStyle(
@@ -151,7 +177,8 @@ class _MyProfileState extends State<MyProfile> {
                                                 color: Colors.grey[500],
                                                 width: 1.5,
                                                 style: BorderStyle.solid),
-                                            borderRadius: BorderRadius.circular(15)),
+                                            borderRadius: BorderRadius.circular(
+                                                15)),
                                       ),
 //                        SmoothStarRating(
 //                            allowHalfRating: false,
@@ -200,6 +227,7 @@ class _MyProfileState extends State<MyProfile> {
               }
             },
           ),
-        )   : Center(child: Text("Error")),);
+        ) : Center(child: Text("Error")),),
+    );
   }
 }

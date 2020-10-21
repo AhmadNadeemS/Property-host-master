@@ -7,6 +7,7 @@ import 'package:signup/main_screen.dart';
 import 'package:signup/states/currentUser.dart';
 
 import './AppLogic/validation.dart';
+import 'helper/helperfunctions.dart';
 
 enum LoginType{
   email,
@@ -31,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   final _auth = FirebaseAuth.instance;
   GlobalKey<FormState> _key = new GlobalKey();
   bool _validate = false;
+
   void _loginUser({@required LoginType type, String email, String password, BuildContext context,}) async {
     CurrentUser _currentUser = Provider.of<CurrentUser>(context, listen: false);
     _sendToServer();
@@ -45,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
           break;
         default:
       }
+
       if (_returnString == 'Success') {
         Navigator.pushAndRemoveUntil(
           context, MaterialPageRoute(

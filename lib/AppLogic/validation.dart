@@ -11,8 +11,6 @@ String validateMobile(String value) {
   return null;
 }
 
-
-
 String validatePassword(String value){
 String pattern = r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$';
 //RegExp regExp = new RegExp(pattern);

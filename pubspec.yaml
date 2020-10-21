@@ -44,6 +44,7 @@ dependencies:
   carousel_pro: ^1.0.0
   font_awesome_flutter:
   nice_button: ^0.1.7
+  shared_preferences: ^0.5.6+3
 
 
 
@@ -68,9 +69,12 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/front1.jpeg
     - assets/logo.png
     - assets/home.jpg
+    - assets/index.jpg
     - assets/google_logo.png
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -83,6 +87,17 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
+  fonts:
+    - family: Overpass
+      fonts:
+        - asset: assets/fonts/overpass_bold.otf
+    - family: OverpassRegular
+      fonts:
+        - asset: assets/fonts/overpass_regular.otf
+    - family: Varela
+      fonts:
+        - asset: assets/fonts/VarelaRound-Regular.ttf
+
   # fonts:
   #   - family: Schyler
   #     fonts:
