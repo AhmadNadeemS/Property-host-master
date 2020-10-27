@@ -20,6 +20,15 @@ if(value.length==0) {
 
   return null;
 }
+String validateBid(String value){
+  String pattern = r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$';
+//RegExp regExp = new RegExp(pattern);
+  if(value.length==0) {
+    return "Bid required";
+  }
+
+  return null;
+}
 String validateStars(String value){
   String pattern = r'^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*.!@$%^&(){}[]:;<>,.?/~_+-=|\]).{8,32}$';
 //RegExp regExp = new RegExp(pattern);

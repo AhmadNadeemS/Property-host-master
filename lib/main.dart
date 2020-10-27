@@ -10,6 +10,8 @@ import 'package:signup/chat/chatrooms.dart';
 import 'package:signup/choseOnMap.dart';
 import 'package:signup/forgetPassword.dart';
 import 'package:signup/home.dart';
+import 'package:signup/homeThree.dart';
+import 'package:signup/homeTwo.dart';
 import 'package:signup/main_screen.dart';
 import 'package:signup/myProfile.dart';
 import 'package:signup/screens/postscreen1.dart';
@@ -38,6 +40,8 @@ class HomePage extends StatelessWidget {
         routes: {
           '/main': (context) => HomePage(),
           '/home': (context) => RoleCheck(),
+          '/homeTwo': (context) => RoleCheckTwo(),
+          '/homeThree': (context) => RoleCheckThree(),
           ActivityFeed.routeName: (context) => ActivityFeed(),
           //'/myProfileFinal': (context) => MyProfileFinal(),
           MyProfileFinal.routeName: (ctx) => MyProfileFinal(),
@@ -50,7 +54,7 @@ class HomePage extends StatelessWidget {
           '/MyProfile': (context) => MyProfile(),
           '/Signup': (context) => SignUpPage(),
           '/ViewAdds': (context) => ViewAdds(),
-          '/PostDetail': (context) => PostDetail(),
+       //   '/PostDetail': (context) => PostDetail(),
           '/postscreen1': (context) => PostFirstScreen(),
           '/choseOnMap': (context) => ChoseOnMap(),
           '/AgentSignup': (context) => AgentSignUp(),

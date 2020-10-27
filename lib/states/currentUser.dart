@@ -17,29 +17,24 @@ import '../services/database.dart';
 import 'package:signup/services/database.dart';
 
 
-class CurrentUser extends ChangeNotifier {
-  User _currentUser = User();
+class CurrentUser extends ChangeNotifier{
+  OurUser _currentUser = OurUser();
+    String _name;
+  final commentsRef  = Firestore.instance.collection('comments');
 
-  //  String _uid;
-  String _name;
-  final commentsRef = Firestore.instance.collection('comments');
-
-  User get getCurrentUser => _currentUser;
-  bool _doneWithReview = false;
-
-  bool get getDoneWithReview => _doneWithReview;
-
-  String get getName => _name;
+  OurUser get getCurrentUser => _currentUser;
+  //String get getUid => _uid;
+ bool _doneWithReview = false;
+ bool get getDoneWithReview => _doneWithReview;
+   String get getName => _name;
   FirebaseAuth _auth = FirebaseAuth.instance;
 
-  Future<String> loginUserWithEmail(
-      String email, String password, BuildContext context) async {
+
+  Future<String> loginUserWithEmail(String email, String password, BuildContext context) async {
     String retVal = "error";
-
-    try {
-      AuthResult _authResult = await _auth.signInWithEmailAndPassword(
-          email: email.trim(), password: password);
-
+    OurUser _user = OurUser();
+    try{
+      AuthResult _authResult = await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
       _currentUser = await OurDatabase().getUserInfo(_authResult.user.uid);
 
       if(_currentUser!=null)
@@ -53,7 +48,6 @@ class CurrentUser extends ChangeNotifier {
     }
     return retVal;
   }
-
 
   Future<String> onStartUp() async{
     String retVal = "error";
@@ -76,13 +70,15 @@ class CurrentUser extends ChangeNotifier {
     }
     return retVal;
   }
-
-
   Future<String> signOut() async{
     String retVal = "error";
     try{
       await _auth.signOut();
-      _currentUser = User();
+      _currentUser = OurUser();
+      //await _auth.currentUser();
+      //_currentUser = null;
+      //_uid = null;
+      //_email = null;
       retVal = "Success";
     }
     catch(e){
@@ -90,26 +86,13 @@ class CurrentUser extends ChangeNotifier {
     }
     return retVal;
   }
-//  Future<String> createUserWithEmailAndPassword(String email, String password,
-//      String name) async {
-//    final authResult = await _auth.createUserWithEmailAndPassword(
-//      email: email,
-//      password: password,
-//    );
-//
-//    // Update the username
-//   // await updateUserName(name, authResult.user);
-//    return authResult.user.uid;
-//  }
 
-  Future<String> signUpUser(String email, String password, String displayName,
-      String title, String location, String age, String description,
-      String phoneNumber, String userType) async {
+
+  Future<String> signUpUser(String email, String password, String displayName,String title,String location,String age, String description, String phoneNumber,String userType) async {
     String retVal = "error";
-    User _user = User();
-    try {
-      AuthResult _authResult = await _auth.createUserWithEmailAndPassword(
-        email: email, password: password,);
+    OurUser _user = OurUser();
+    try{
+      AuthResult _authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password,);
       _user.uid = _authResult.user.uid;
       _user.email = _authResult.user.email;
       _user.displayName = displayName;
@@ -121,7 +104,8 @@ class CurrentUser extends ChangeNotifier {
       _user.UserType = userType;
       String _returnString = await OurDatabase().createUser(_user);
 
-      if (_returnString == 'Success') {
+      if(_returnString == 'Success')
+      {
         retVal = "Success";
       }
     } on PlatformException catch (e)
@@ -135,6 +119,7 @@ class CurrentUser extends ChangeNotifier {
   }
 
 
+
   Future<String> loginUserWithGoogle() async {
     String retVal = "error";
     GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -143,21 +128,22 @@ class CurrentUser extends ChangeNotifier {
         'https://www.googleapis.com/auth/contacts.readonly',
       ],
     );
-    User _user = User();
-    try {
+    OurUser _user = OurUser();
+    try{
       GoogleSignInAccount _googleUser = await _googleSignIn.signIn();
       GoogleSignInAuthentication _googleAuth = await _googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-          idToken: _googleAuth.idToken, accessToken: _googleAuth.accessToken);
+      final AuthCredential credential = GoogleAuthProvider.getCredential(idToken: _googleAuth.idToken, accessToken: _googleAuth.accessToken);
       AuthResult _authResult = await _auth.signInWithCredential(credential);
-      if (_authResult.additionalUserInfo.isNewUser) {
+      if(_authResult.additionalUserInfo.isNewUser)
+      {
         _user.uid = _authResult.user.uid;
         _user.email = _authResult.user.email;
         _user.displayName = _authResult.user.displayName;
-        _user.image = _authResult.user.photoUrl;
+        _user.image=_authResult.user.photoUrl;
         // _user.lastName = _authResult.user.displayName;
         //  _user.phoneNumber = _authResult.user.phoneNumber;
         OurDatabase().createUser(_user);
+
       }
 //      _currentUser.uid = _authResult.user.uid;
 //      _currentUser.email = _authResult.user.email;

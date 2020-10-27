@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
-class User {
+class OurUser{
   String uid;
   String email;
 
@@ -11,7 +11,8 @@ class User {
   String UserType;
   String image;
 
-  User({
+
+  OurUser({
     this.uid,
     this.email,
     this.accountCreated,
@@ -20,4 +21,5 @@ class User {
     this.UserType,
     this.image,
   });
+
 }

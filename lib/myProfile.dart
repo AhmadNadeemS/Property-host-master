@@ -4,20 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MyProfile extends StatefulWidget {
-  final bool isAdmin;
+  final bool isAgent;
 
-  const MyProfile({Key key, this.isAdmin}) : super(key: key);
+  const MyProfile({Key key, this.isAgent}) : super(key: key);
   @override
-  _MyProfileState createState() => _MyProfileState(this.isAdmin);
+  _MyProfileState createState() => _MyProfileState(this.isAgent);
 }
 
 class _MyProfileState extends State<MyProfile> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool isAdmin = true;
+  bool isAgent = true;
 
   String data;
-  _MyProfileState(this.isAdmin);
+  _MyProfileState(this.isAgent);
 
   //bool isAdmin = false;
 

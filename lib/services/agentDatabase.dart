@@ -13,8 +13,10 @@ class AgentDatabase{
         'description': user.description,
         'phoneNumber': user.phoneNumber,
         'email': user.email,
+        'image':user.image,
         //    'image':user.image,
         'User Type': "user",
+
         //    'accountCreated' : Timestamp.now(),
       });
       retVal='Success';
@@ -29,7 +31,7 @@ class AgentDatabase{
     AgentUser retVal = AgentUser();
     try {
       DocumentSnapshot _docSnapshot =
-          await _firestore.collection("agentRequest").document(uid).get();
+      await _firestore.collection("agentRequest").document(uid).get();
       retVal.uid = uid;
       retVal.Name = _docSnapshot.data["firstName"];
       retVal.email = _docSnapshot.data['email'];

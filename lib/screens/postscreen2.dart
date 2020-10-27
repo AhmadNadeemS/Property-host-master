@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:nice_button/NiceButton.dart';
 import 'package:signup/main_screen.dart';
+import 'package:signup/models/Adpost.dart';
 import 'package:signup/services/PostAdCreation.dart';
 import '../utils.dart';
 
@@ -22,11 +23,12 @@ class PostSecondScreen extends StatefulWidget{
   String AvailDays;
   String time;
   String unitArea;
-  String location;
+  String address;
   String purpose, propertySize;
 
+  String location;
 
-  PostSecondScreen(this.title, this.desc, this.price, this.City, this.location,
+  PostSecondScreen(this.title, this.desc, this.price, this.City, this.address,
       this.purpose, this.unitArea, this.AvailDays, this.time, this.propertySize,
       {Key key})
       : super(key: key);
@@ -43,10 +45,10 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
   bool isUploading = false;
   List<NetworkImage> _listOfImages = <NetworkImage>[];
 
-  //List<Object> images = List<Object>();
-  //Future<File> imageFile;
+
 
   PostAddFirebase createpost = PostAddFirebase();
+  AdPost adPost = new AdPost();
 
   // main features controllers
 
@@ -171,6 +173,7 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
   void showInSnackBar(String value) {
     _scaffoldKey.currentState.showSnackBar(
         new SnackBar(content: new Text(value)));
+
   }
 
   @override
@@ -227,7 +230,7 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
 
 
 
-                UploadPropertyImages(),
+              UploadPropertyImages(),
 
               //ReadImagesFromFirebaseStorage(),
               //_uploadImagesInput(),
@@ -313,66 +316,89 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
 
     List<String> values =  await GetImageReferences();
 
-      print(values.length.toString() + "entered in runMyfuture method");
+    print(values.length.toString() + "entered in runMyfuture method");
 
     if (_selectedpropertyType == "Homes") {
-      setState(() {
-        if (buildYear.text.isEmpty || parkingSpace.text.isEmpty ||
-            Rooms.text.isEmpty || BathRooms.text.isEmpty
-            || kitchens.text.isEmpty || Floors.text.isEmpty) {
-          _validate = true;
-        }
-        else {
-          createpost.CreatePostAddHomes(
+      if(_selectedpropertyDetailType =="Pent House") {
+        adPost.title = widget.title;
+        adPost.desc = widget.desc;
+        adPost.price = widget.price;
+        adPost.Address = widget.address;
+        adPost.City = widget.City;
+        adPost.AvailDays = widget.AvailDays;
+        adPost.time = widget.time;
+        adPost.propertySize = widget.propertySize;
+        adPost.unitArea = widget.unitArea;
+        adPost.purpose = widget.purpose;
+        adPost.propertyType = _selectedpropertyType;
+        adPost.propertyDeatil = _selectedpropertyDetailType;
+        adPost.ImageUrls = values;
 
-              widget.title,
-              widget.desc,
-              widget.price,
-              widget.City,
-              widget.AvailDays,
-              widget.time,
-              widget.unitArea,
-              widget.location,
-              widget.purpose,
-              _selectedpropertyType,
-              _selectedpropertyDetailType,
-              buildYear.text,
-              parkingSpace.text,
-              Rooms.text,
-              BathRooms.text,
-              kitchens.text,
-              Floors.text,
-              widget.propertySize,
-              values);
+        createpost.CreatePostAddHomesPentHouse(adPost);
 
-          // print(imageUrls);
-        }
-      });
+
+      } else{
+
+        setState(() {
+          if (buildYear.text.isEmpty || parkingSpace.text.isEmpty ||
+              Rooms.text.isEmpty || BathRooms.text.isEmpty
+              || kitchens.text.isEmpty || Floors.text.isEmpty) {
+            _validate = true;
+          }
+          else {
+            adPost.title = widget.title;
+            adPost.desc = widget.desc;
+            adPost.price = widget.price;
+            adPost.Address = widget.address;
+            adPost.City = widget.City;
+            adPost.AvailDays = widget.AvailDays;
+            adPost.time = widget.time;
+            adPost.propertySize = widget.propertySize;
+            adPost.unitArea = widget.unitArea;
+            adPost.purpose = widget.purpose;
+            adPost.propertyType = _selectedpropertyType;
+            adPost.propertyDeatil = _selectedpropertyDetailType;
+            adPost.buildyear = buildYear.text;
+            adPost.ParkingSpace = parkingSpace.text;
+            adPost.Rooms = Rooms.text;
+            adPost.bathrooms = BathRooms.text;
+            adPost.Kitchens = kitchens.text;
+            adPost.Floors = Floors.text;
+            adPost.ImageUrls = values;
+
+            createpost.CreatePostAddHomes(adPost);
+
+            // print(imageUrls);
+          }
+        });
+      }
     }
 
     else if (_selectedpropertyType == "Plots") {
-      createpost.CreatePostAddPlots(
-          widget.title,
-          widget.desc,
-          widget.price,
-          widget.City,
-          widget.AvailDays,
-          widget.time,
-          widget.unitArea,
-          widget.location,
-          widget.purpose,
-          _selectedpropertyType,
-          _selectedpropertyDetailType,
-          _checkBoxVal,
-          _checkBoxVal2,
-          _checkBoxVal3,
-          _checkBoxVal4,
-          _checkBoxVal5,
-          _checkBoxVal6,
-          _checkBoxVal7,
-          _checkBoxVal8,
-          widget.propertySize,
-          values);
+
+      adPost.title = widget.title;
+      adPost.desc= widget.desc;
+      adPost.price= widget.price;
+      adPost.Address= widget.address;
+      adPost.City= widget.City;
+      adPost.AvailDays=widget.AvailDays;
+      adPost.time= widget.time;
+      adPost.propertySize= widget.propertySize;
+      adPost.unitArea=widget.unitArea;
+      adPost.purpose= widget.purpose;
+      adPost.propertyType=  _selectedpropertyType;
+      adPost.propertyDeatil= _selectedpropertyDetailType;
+      adPost.possesion=  _checkBoxVal;
+     adPost.ParkingSpaces= _checkBoxVal2;
+     adPost.corners = _checkBoxVal3;
+     adPost.disputed= _checkBoxVal4;
+     adPost.balloted= _checkBoxVal5;
+     adPost.suiGas= _checkBoxVal6;
+     adPost.waterSupply = _checkBoxVal7;
+      adPost.sewarge= _checkBoxVal8;
+
+      adPost.ImageUrls = values;
+      createpost.CreatePostAddPlots(adPost);
     }
 
     else {
@@ -383,31 +409,28 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
           _validate = true;
         }
         else {
-          createpost.CreatePostAddCommerical(
-
-              widget.title,
-              widget.desc,
-              widget.price,
-              widget.City,
-              widget.AvailDays,
-              widget.time,
-              widget.unitArea,
-
-              widget.location,
-              widget.purpose,
-              _selectedpropertyType,
-              _selectedpropertyDetailType,
-              buildYear.text,
-              Rooms.text,
-              parkingSpace.text,
-              Floors.text,
-              flooring.text,
-              _checkBoxVal,
-              _checkBoxVal2,
-              _checkBoxVal3,
-              _checkBoxVal4,
-              widget.propertySize,
-              values);
+          adPost.title = widget.title;
+          adPost.desc= widget.desc;
+          adPost.price= widget.price;
+          adPost.Address= widget.address;
+          adPost.City= widget.City;
+          adPost.AvailDays=widget.AvailDays;
+          adPost.time= widget.time;
+          adPost.propertySize= widget.propertySize;
+          adPost.unitArea=widget.unitArea;
+          adPost.purpose= widget.purpose;
+          adPost.propertyType=  _selectedpropertyType;
+          adPost.propertyDeatil= _selectedpropertyDetailType;
+          adPost.buildyear=  buildYear.text;
+          adPost.ParkingSpace= parkingSpace.text;
+          adPost.Rooms=   Rooms.text;
+          adPost.Floors= Floors.text;
+          adPost.possesion=  _checkBoxVal;
+          adPost.ParkingSpaces= _checkBoxVal2;
+          adPost.corners = _checkBoxVal3;
+          adPost.disputed= _checkBoxVal4;
+          adPost.ImageUrls = values;
+          createpost.CreatePostAddCommerical(adPost);
         }
       });
     }
@@ -608,24 +631,24 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
                 ))
                     : Center(child: Text("No images selected ")),*/
 
-    ],
-    ),
-    )
-   )
+                ],
+              ),
+            )
+        )
     );
 
   }
 
 
- Future<List<String>> GetImageReferences() async {
+  Future<List<String>> GetImageReferences() async {
 
     String error = "No error detected";
     List<String> urls = <String>[];
-   // var firebaseUser = await FirebaseAuth.instance.currentUser();
+    // var firebaseUser = await FirebaseAuth.instance.currentUser();
 
     try {
       for (var imageFile in images) {
-      await  postImage(imageFile).then((downloadUrl) {
+        await  postImage(imageFile).then((downloadUrl) {
           urls.add(downloadUrl.toString());
           print( "i am third line of awaiting post image");
           if (urls.length == images.length) {
@@ -656,73 +679,73 @@ class _PostSecondScreenState extends State<PostSecondScreen>{
       error = e.toString();
       print(error);
     }
-  return urls;
+    return urls;
 
   }
 
 
 
-Widget ReadImagesFromFirebaseStorage(){
+  Widget ReadImagesFromFirebaseStorage(){
 
 
     return Row(
-      children: <Widget>[
-        Expanded(
-          child:SizedBox(
-            height: 500,
-          child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('PostAdd').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        _listOfImages = [];
-                        for (int i = 0;
-                        i <
-                            snapshot.data.documents[index].data['Image Urls']
-                                .length;
-                        i++) {
-                          _listOfImages.add(NetworkImage(snapshot
-                              .data.documents[index].data['Image Urls'][i]));
+        children: <Widget>[
+          Expanded(
+              child:SizedBox(
+                  height: 500,
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: Firestore.instance.collection('PostAdd').snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                              itemCount: snapshot.data.documents.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                _listOfImages = [];
+                                for (int i = 0;
+                                i <
+                                    snapshot.data.documents[index].data['Image Urls']
+                                        .length;
+                                i++) {
+                                  _listOfImages.add(NetworkImage(snapshot
+                                      .data.documents[index].data['Image Urls'][i]));
+                                }
+                                return Column(
+                                  children: <Widget>[
+                                    Container(
+                                      margin: EdgeInsets.all(10.0),
+                                      height: 200,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                      ),
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Carousel(
+                                          boxFit: BoxFit.cover,
+                                          images: _listOfImages,
+                                          autoplay: false,
+                                          indicatorBgPadding: 5.0,
+                                          dotPosition: DotPosition.bottomCenter,
+                                          animationCurve: Curves.fastOutSlowIn,
+                                          animationDuration:
+                                          Duration(milliseconds: 2000)),
+                                    ),
+                                    Container(
+                                      height: 1,
+                                      width: MediaQuery.of(context).size.width,
+                                      color: Colors.red,
+                                    )
+                                  ],
+                                );
+                              });
+                        } else {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
-                        return Column(
-                          children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.all(10.0),
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                              ),
-                              width: MediaQuery.of(context).size.width,
-                              child: Carousel(
-                                  boxFit: BoxFit.cover,
-                                  images: _listOfImages,
-                                  autoplay: false,
-                                  indicatorBgPadding: 5.0,
-                                  dotPosition: DotPosition.bottomCenter,
-                                  animationCurve: Curves.fastOutSlowIn,
-                                  animationDuration:
-                                  Duration(milliseconds: 2000)),
-                            ),
-                            Container(
-                              height: 1,
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.red,
-                            )
-                          ],
-                        );
-                      });
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              }))
+                      }))
 
-    )]
+          )]
     );
-}
+  }
 
 
 
@@ -966,7 +989,7 @@ Widget ReadImagesFromFirebaseStorage(){
               ),
             ],
           ),
-         // dropdownfield of flooring
+          // dropdownfield of flooring
 
         ],
       ),

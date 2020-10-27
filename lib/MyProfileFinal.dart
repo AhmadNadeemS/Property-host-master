@@ -18,8 +18,8 @@ class MyProfileFinal extends StatefulWidget {
 
   @override
   _MyProfileStateFinal createState() => _MyProfileStateFinal(
-        uid: this.uid,
-      );
+    uid: this.uid,
+  );
 }
 
 class _MyProfileStateFinal extends State<MyProfileFinal> {

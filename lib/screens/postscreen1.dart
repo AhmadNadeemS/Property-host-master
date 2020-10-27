@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:path/path.dart';
+import 'package:signup/models/Adpost.dart';
 import 'package:signup/screens/postscreen2.dart';
 import '../AppLogic/validation.dart';
 
@@ -14,7 +15,6 @@ class PostFirstScreen extends StatefulWidget {
 
   @override
   _PostFirstScreenState createState() => _PostFirstScreenState();
-
 
 
 }
@@ -32,7 +32,7 @@ class _PostFirstScreenState extends State<PostFirstScreen>{
   TextEditingController titleController = new TextEditingController();
   TextEditingController descController = new TextEditingController();
   TextEditingController priceController = new TextEditingController();
-  TextEditingController locationController = new TextEditingController();
+  TextEditingController addressController = new TextEditingController();
 
   TextEditingController MetTimeController = new TextEditingController();
   TextEditingController AvailDays = new TextEditingController();
@@ -49,7 +49,7 @@ class _PostFirstScreenState extends State<PostFirstScreen>{
   ];
 
 
-  String title;String desc; int price;String location; String purpose;
+  String title; String desc; int price;String location; String purpose;
 
   String description;
 
@@ -67,6 +67,15 @@ class _PostFirstScreenState extends State<PostFirstScreen>{
 
   GlobalKey<FormState> _key = new GlobalKey();
   bool _validate = false;
+
+  @override
+  void initState(){
+
+    super.initState();
+  }
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -124,6 +133,7 @@ class _PostFirstScreenState extends State<PostFirstScreen>{
                       Icons.title,
                       color: Color(0xff2470c7),
                     ),
+                  //  hintText: widget.adPost.title,
                     labelText: 'Title'),
               ),
               TextFormField(
@@ -174,7 +184,7 @@ class _PostFirstScreenState extends State<PostFirstScreen>{
                 //textAlign: TextAlign,
               ),
               TextFormField(
-                controller: locationController,
+                controller: addressController,
                 keyboardType: TextInputType.text,
                 validator: ValidateLocation,
                 onSaved: (String val) {
@@ -210,7 +220,7 @@ class _PostFirstScreenState extends State<PostFirstScreen>{
 
 
                     Navigator.push(this.context, MaterialPageRoute(builder: (context){
-                      return PostSecondScreen(titleController.text,descController.text,int.parse(priceController.text),cityController.text,locationController.text,
+                      return PostSecondScreen(titleController.text,descController.text,int.parse(priceController.text),cityController.text,addressController.text,
                            _selectedPurpose,_selectedUnitArea,AvailDays.text,MetTimeController.text,propertySize.text);
                     }));
                   }

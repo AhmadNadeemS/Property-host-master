@@ -14,16 +14,16 @@ class AgentUser {
   String image;
   String address;
 
-  AgentUser(
-      {this.uid,
-      this.email,
-      this.age,
-      this.location,
-      this.description,
-      this.accountCreated,
-      this.Name,
-      this.phoneNumber,
-      this.UserType,
-      this.image,
-      this.address});
+  AgentUser({
+        this.uid,
+        this.email,
+        this.age,
+        this.location,
+        this.description,
+        this.accountCreated,
+        this.Name,
+        this.phoneNumber,
+        this.UserType,
+        this.image,
+        this.address});
 }

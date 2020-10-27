@@ -3,36 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:signup/MainScreenUsers.dart';
 import 'package:signup/main_screen.dart';
-import 'package:signup/myProfile.dart';
 import 'package:signup/signup.dart';
+import 'package:signup/userProfile.dart';
 
-class RoleCheckList extends StatefulWidget {
+import 'helper/helperfunctions.dart';
+
+class RoleCheckTwo extends StatefulWidget {
   @override
-  _RoleCheckListState createState() => _RoleCheckListState();
-
+  _RoleCheckTwoState createState() => _RoleCheckTwoState();
 }
 
-class _RoleCheckListState extends State<RoleCheckList> {
+class _RoleCheckTwoState extends State<RoleCheckTwo> {
   //RoleCheck(this.isAdmin);
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  bool isAdmin = false;
+
+  //bool isAgent = false;
 
   Future<FirebaseUser> getUser() {
-
     return _auth.currentUser();
-
   }
 
   FirebaseUser user;
 
   @override
-
   void initState() {
-
     super.initState();
 
     initUser();
-
   }
 
   initUser() async {
@@ -45,55 +42,54 @@ class _RoleCheckListState extends State<RoleCheckList> {
     return Scaffold(
 //        appBar: AppBar(title: Text('Home ${user.email}'),),
 
-      body: user != null  ? Container(
-
+      body: user != null
+          ? Container(
           child: StreamBuilder<DocumentSnapshot>(
-
-              stream: Firestore.instance.collection('users').document(user.uid).snapshots(),
-
-              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+              stream: Firestore.instance
+                  .collection('users')
+                  .document(user.uid)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+//                HelperFunctions.saveUserLoggedInSharedPreference(true);
+//                HelperFunctions.saveUserNameSharedPreference(
+//                    snapshot.data["displayName"]);
+//                HelperFunctions.saveUserEmailSharedPreference(
+//                    snapshot.data["email"]);
+//                HelperFunctions.saveUserPhoneNoSharedPreference(
+//                    snapshot.data["phoneNumber"]);
 
                 if (snapshot.hasError) {
-
                   return Text('Error: ${snapshot.hasError}');
-
                 }
 
                 print(user.uid);
 
                 return snapshot.hasData
-
                     ? _checkRole(snapshot.data)
-
                     : Text('No Data');
-
-              })
-      )
-
+              }))
           : Center(child: Text("Error")),
     );
-
   }
 
   _checkRole(DocumentSnapshot snapshot) {
-
-    if (snapshot.data['role'] == 'admin') {
-
+    if (snapshot.data['User Type'] == 'Agent') {
       //isAdmin =true;
-      print('admin');
+      print('agent');
       //MainScreen(isAdmin: true,);
-      return MyProfile(isAdmin: true,);
+      return UserProfile(
+        isAgent: true,
+      );
       //return MainScreen(isAdmin);
 
     } else {
       //isAdmin= false;
       print('other');
       //return MainScreen();
-      return MyProfile(isAdmin: false,);
-
+      return UserProfile(
+        isAgent: false,
+      );
     }
-
   }
 }
-
-

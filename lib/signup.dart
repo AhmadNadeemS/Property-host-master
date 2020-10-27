@@ -190,7 +190,6 @@ class _LoginPageState extends State<SignUpPage> {
                 labelText: 'Email',
               ),
             ),
-
             TextFormField(
               controller: _passwordTextController,
               decoration: InputDecoration(
@@ -332,6 +331,23 @@ class _LoginPageState extends State<SignUpPage> {
                   }
                 },
 
+//              catch(e)
+//              {
+//                print(e);
+//              }
+
+//              if (_key.currentState.validate()) {
+//                // No any error in validation
+//                _key.currentState.save();
+//                print("Name $FName");
+//                print("Mobile $phoneNumber");
+//                print("Email $LName");
+//              } else {
+//                // validation error
+//                setState(() {
+//                  _validate = true;
+//                });
+//              }
 
 
                 child: Text(

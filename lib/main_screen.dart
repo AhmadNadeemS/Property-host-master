@@ -74,18 +74,6 @@ class _MainScreenState extends State<MainScreen> {
                 Colors.black.withOpacity(.4),
                 Colors.black.withOpacity(.2),
               ]),
-
-//              gradient: LinearGradient(
-//           //     colors: [Colors.deepPurple, Colors.purple], stops: [0.5, 1.0],
-//                colors: [Colors.deepPurple, Color(0xff2470c7)], stops: [0.5, 1.0],
-//              ),
-//              gradient: LinearGradient(
-//                  begin: Alignment.bottomRight,
-//                  colors: [
-//                    Colors.black.withOpacity(.4),
-//                    Colors.black.withOpacity(.2),
-//                  ]
-//              ),
             ),
           ),
           //title: Text('Property Host'),
@@ -107,60 +95,61 @@ class _MainScreenState extends State<MainScreen> {
 
                   user != null
                       ? StreamBuilder(
-                          stream: Firestore.instance
-                              .collection('users')
-                              .where("uid", isEqualTo: userid)
-                              .snapshots(),
+                      stream: Firestore.instance
+                          .collection('users')
+                          .where("uid", isEqualTo: userid)
+                          .snapshots(),
 
-                          // ignore: missing_return
-                          builder: (BuildContext context,
-                              AsyncSnapshot<QuerySnapshot> snapshot) {
-                            if (snapshot.data == null)
-                              return CircularProgressIndicator();
-                            //final userDocument = snapshot.data;
-                            //final title=  snapshot.data.userocument['displayName']);
-                            //CircularProgressIndicator();
-                            return Expanded(
-                              child: ListView.builder(
-                                  itemCount: snapshot.data.documents.length,
-                                  // ignore: missing_return
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    //   String Data= snapshot.data.documents.elementAt(index)['displayName'];
-                                    // String Result = Data.substring(0,Data.lastIndexOf(" "));
+                      // ignore: missing_return
+                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.active) {
+                          return Expanded(
+                            child: ListView.builder(
+                                itemCount: snapshot.data.documents.length,
+                                // ignore: missing_return
+                                itemBuilder: (BuildContext context, int index) {
+                                 // String Data = snapshot.data.documents.elementAt(
+                                      //index)['displayName'];
+                                 // String Result = Data.substring(0, Data.lastIndexOf(" "));
+                                  //var text = Data.substring(Result, Data.lastIndexOf('') - Result);
+                                  //String ret = Result[0] +""+ Result[1];
+                                  //print("Error");
+                                  return user != null
+                                      ? Container(
+                                    margin: EdgeInsets.only(top: 19, left: 80),
+                                    child: Text(
+                                      snapshot.data.documents.elementAt(
+                                          index)['displayName'], style: TextStyle(fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                        fontStyle: FontStyle.italic),),
+                                  )
+                                      : IconButton(
+                                    icon: Icon(Icons.person),
+                                    // ignore: missing_return
+                                    onPressed: () {
+                                      Navigator.pushNamed(context, '/LoginScreen');
+                                    },
+                                  );
+                                }
+                            ),
+                          );
+                        }
+                        else if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Container(child: Center(child: CircularProgressIndicator()));
+                          //return CircularProgressIndicator();
+                          //final userDocument = snapshot.data;
+                          //final title=  snapshot.data.userocument['displayName']);
+                          //CircularProgressIndicator();
 
-                                    print(user.uid);
-                                    return user != null
-                                        ? Container(
-                                            margin: EdgeInsets.only(
-                                                top: 19, left: 80),
-                                            child: Text(
-                                              snapshot.data.documents.elementAt(
-                                                  index)['displayName'],
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black,
-                                                  fontStyle: FontStyle.italic),
-                                            ),
-                                          )
-                                        : IconButton(
-                                            icon: Icon(Icons.person),
-                                            // ignore: missing_return
-                                            onPressed: () {
-                                              Navigator.pushNamed(
-                                                  context, '/LoginScreen');
-                                            },
-                                          );
-                                  }),
-                            );
-                          })
+                        }
+                      })
                       : IconButton(
-                          icon: Icon(Icons.person),
-                          // ignore: missing_return
-                          onPressed: () {
-                            Navigator.pushNamed(context, '/LoginScreen');
-                          },
-                        ),
+                    icon: Icon(Icons.person),
+                    // ignore: missing_return
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/LoginScreen');
+                    },
+                  ),
                 ],
               ),
             ),
@@ -171,258 +160,424 @@ class _MainScreenState extends State<MainScreen> {
 
         drawer: Theme(
           data: Theme.of(context).copyWith(
-              //        canvasColor: Colors.blueGrey,
-              ),
+            //        canvasColor: Colors.blueGrey,
+          ),
           child: user != null
               ? Drawer(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                      Container(
-                        height: 120.0,
-                        //width: 500,
-                        child: DrawerHeader(
-                            margin: EdgeInsets.zero,
-                            padding: EdgeInsets.zero,
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: AssetImage('assets/index.jpg'))),
-                            child: Stack(children: <Widget>[
-                              Positioned(
-                                  bottom: 1.0,
-                                  left: 110.0,
-                                  //top:10,
-                                  child: Text("Menu",
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 30.0,
-                                          //fontFamily: "Roboto",
-                                          fontWeight: FontWeight.w400))),
-                            ])),
-                      ),
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                Container(
+                  height: 120.0,
+                  //width: 500,
+                  child: StreamBuilder(
+    stream: Firestore.instance
+        .collection('users')
+        .where("uid", isEqualTo: userid)
+        .snapshots(),
 
-                      Container(
-                        height: 50,
-                        //color: Colors.white.withAlpha(128),
-                        // color: Colors.grey[800],
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.add_box,
-                                color: Colors.green[800],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text("Post an Ad"),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/postscreen1');
-                          },
-                        ),
-                      ),
-                      //SizedBox(height: 1.0),
-                      // ignore: unrelated_type_equality_checks
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      Container(
-                        height: 50,
-                        // color: Colors.grey[800],
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.people_outline,
-                                color: Colors.green[800],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text("Agents List"),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/MyProfile');
-                          },
-                        ),
-                      ),
+    // ignore: missing_return
+    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+//                      return DrawerHeader(
+//                          margin: EdgeInsets.zero,
+//                          padding: EdgeInsets.zero,
+//                       //   decoration: BoxDecoration(
+////                          image: DecorationImage(
+////                              fit: BoxFit.fill,
+////                              image: AssetImage('assets/index.jpg'))),
+//                          child: Stack(children: <Widget>[
+//                            ClipRRect(
+//                              borderRadius: BorderRadius.circular(85),
+//                              child: Image.network("https://thumbs.dreamstime.com/b/user-profile-avatar-icon-134114292.jpg"),
+//                            ),
+//
+//                            Positioned(
+//                                bottom: 1.0,
+//                                left: 110.0,
+//                                //top:10,
+//                                child: Text("Menu",
+//                                    style: TextStyle(
+//                                        color: Colors.black,
+//                                        fontSize: 30.0,
+//                                        //fontFamily: "Roboto",
+//                                        fontWeight: FontWeight.w400))),
+//                          ]));
+      {
+        if (snapshot.connectionState == ConnectionState.active) {
+          return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+              itemCount: snapshot.data.documents.length,
+              // ignore: missing_return
+              itemBuilder: (BuildContext context, int index) {
+//                String Data = snapshot.data.documents.elementAt(
+//                    index)['displayName'];
+//                String Result = Data.substring(0, Data.lastIndexOf(" "));
+                //var text = Data.substring(Result, Data.lastIndexOf('') - Result);
+                //String ret = Result[0] +""+ Result[1];
+                print(user.uid);
+                return user != null
+                    ?
+                     DrawerHeader(
+                        margin: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
+                     //   decoration: BoxDecoration(
+//                          image: DecorationImage(
+//                              fit: BoxFit.fill,
+//                              image: AssetImage('assets/index.jpg'))),
+                        child: Stack(children: <Widget>[
+//                          Card(
+//                            //height: 250,
+//                            color: Colors.deepOrangeAccent,
+//                          ),
+                          Row(
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              snapshot
+                                  .data.documents
+                                  .elementAt(index)['image'] ==null ? Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
 
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      Container(
-                        height: 50,
-                        //color: Colors.grey[800],
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              Icon(
-                                Icons.library_books,
-                                color: Colors.green[800],
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text("Your Ads"),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/ViewAdds');
-                          },
-                        ),
-                      ),
-                      //SizedBox(height: 1.0),
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      isAgent
-                          ? Container(
-                              height: 50,
-                              //color: Colors.grey[800],
-                              child: ListTile(
-                                title: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.person,
-                                      color: Colors.green[800],
+                                  width: 100,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 6.0,
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Text("My Profile"),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/UserProfile');
-                                },
-                              ),
-                            )
-                          : Container(),
-                      //SizedBox(height: 1.0),
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      Container(
-                        height: 50,
-                        //color: Colors.grey[800],
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              Icon(Icons.chat_bubble),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text("Chat"),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/ChatRoom');
-                          },
-                        ),
-                      ),
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-
-                      Container(
-                        height: 50,
-                        //color: Colors.grey[800],
-                        child: ListTile(
-                          title: Row(
-                            children: <Widget>[
-                              Icon(Icons.ac_unit),
-                              Padding(
-                                padding: EdgeInsets.only(left: 8.0),
-                                child: Text("Advertise"),
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.pushNamed(context, '/Advertise');
-                          },
-                        ),
-                      ),
-                      //SizedBox(height: 1.0),
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      isAgent
-                          ? Container()
-                          : Container(
-                              height: 50,
-                              //color: Colors.grey[800],
-                              child: ListTile(
-                                title: Row(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.check_circle_outline,
-                                      color: Colors.green[800],
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(left: 8.0),
-                                      child: Text("Apply for Agent"),
-                                    ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  Navigator.pushNamed(context, '/AgentSignup');
-                                },
-                              ),
-                            ),
-                      //SizedBox(height: 1.0),
-                      Divider(
-                        thickness: 0.5,
-                        color: Colors.lightBlueAccent,
-                      ),
-                      user != null
-                          ? Container(
-                              height: 50,
-                              //color: Colors.grey[800],
-                              child: ListTile(
-                                  title: Row(
-                                    children: <Widget>[
-                                      Icon(
-                                        Icons.person_pin,
-                                        color: Colors.green[800],
-                                      ),
-                                      Padding(
-                                        padding: EdgeInsets.only(left: 8.0),
-                                        child: Text("Sign Out"),
-                                      ),
-                                    ],
                                   ),
-                                  onTap: ()
-                                      //      Navigator.pop(context);
-                                      async {
-                                    //signOut();
-                                    // Navigator.pushNamed(context, '/LoginScreen');
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80),
+                                      child: Image.network("https://thumbs.dreamstime.com/b/user-profile-avatar-icon-134114292.jpg",
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.fill)),
+                                ),
+                              ):Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
 
-                                    String _returnString =
-                                        await _currentUser.signOut();
-                                    if (_returnString == 'Success') {
-                                      Navigator.pushAndRemoveUntil(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => OurRoot()),
-                                        (route) => false,
-                                      );
-                                    }
-                                  }),
-                            )
-                          : SizedBox.shrink(),
-                    ],
+                                  width: 100,
+                                  height: 90,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(100),
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 6.0,
+                                    ),
+                                  ),
+                                  child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(80),
+                                      child: Image.network(snapshot
+                                          .data.documents
+                                          .elementAt(index)['image'],
+    loadingBuilder: (BuildContext context,
+    Widget child,
+    ImageChunkEvent loadingProgress) {
+      if (loadingProgress == null) return child;
+      return Center(
+        child: CircularProgressIndicator(
+          value: loadingProgress
+              .expectedTotalBytes !=
+              null
+              ? loadingProgress
+              .cumulativeBytesLoaded /
+              loadingProgress.expectedTotalBytes
+              : null,
+        ),
+      );
+    },
+                                          width: 80,
+                                          height: 80,
+                                          fit: BoxFit.fill)),
+                                ),
+                              ),
+                              Row(
+//crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    margin:EdgeInsets.only(bottom: 50,left: 30),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      //crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text("Welcome !"),
+                                        Text(snapshot.data.documents.elementAt(
+                                            index)['displayName']),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          //CircleAvatar(
+
+                            //borderRadius: BorderRadius.circular(85),
+                            //height:200,
+//                               decoration: BoxDecoration(
+//                          image: DecorationImage(
+//                              fit: BoxFit.fill,
+//                              image: NetworkImage("https://thumbs.dreamstime.com/b/user-profile-avatar-icon-134114292.jpg",)),),
+//                            //child: Image.network("https://thumbs.dreamstime.com/b/user-profile-avatar-icon-134114292.jpg"),
+                          //),
+//                          Positioned(
+//                              bottom: 1.0,
+//                              left: 10.0,
+//                              //top:10,
+//                              child: Text(Result,
+//                                  style: TextStyle(
+//                                      color: Colors.black,
+//                                      fontSize: 30.0,
+//                                      //fontFamily: "Roboto",
+//                                      fontWeight: FontWeight.w400))),
+                        ]))
+                    : IconButton(
+                  icon: Icon(Icons.person),
+                  // ignore: missing_return
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/LoginScreen');
+                  },
+                );
+              }
+          );
+        }
+        else if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(child: Center(child: CircularProgressIndicator()));
+          //return CircularProgressIndicator();
+          //final userDocument = snapshot.data;
+          //final title=  snapshot.data.userocument['displayName']);
+          //CircularProgressIndicator();
+
+        }
+      }
+                    }
                   ),
+                ),
+
+                Container(
+                  //margin:EdgeInsets.only(top:35),
+                  height: 50,
+                  //color: Colors.white.withAlpha(128),
+                  // color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.add_box,
+                          color: Colors.green[800],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Post an Ad"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/postscreen1');
+                    },
+                  ),
+                ),
+                //SizedBox(height: 1.0),
+                // ignore: unrelated_type_equality_checks
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+                Container(
+                  height: 50,
+                  // color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.people_outline,
+                          color: Colors.green[800],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Agents List"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/MyProfile');
+                    },
+                  ),
+                ),
+
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+                Container(
+                  height: 50,
+                  //color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.library_books,
+                          color: Colors.green[800],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Your Ads"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/ViewAdds');
+                    },
+                  ),
+                ),
+                //SizedBox(height: 1.0),
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+                Container(
+                  height: 50,
+                  //color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.person,
+                          color: Colors.green[800],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("My Profile"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/UserProfile');
+                    },
+                  ),
+                ),
+                //    : Container(),
+                //SizedBox(height: 1.0),
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+                Container(
+                  height: 50,
+                  //color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(Icons.chat_bubble),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Chat"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/ChatRoom');
+                    },
+                  ),
+                ),
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+
+                Container(
+                  height: 50,
+                  //color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(Icons.ac_unit),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Advertise"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/Advertise');
+                    },
+                  ),
+                ),
+                //SizedBox(height: 1.0),
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+                isAgent
+                    ? Container()
+                    : Container(
+                  height: 50,
+                  //color: Colors.grey[800],
+                  child: ListTile(
+                    title: Row(
+                      children: <Widget>[
+                        Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green[800],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: 8.0),
+                          child: Text("Apply for Agent"),
+                        ),
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.pushNamed(context, '/AgentSignup');
+                    },
+                  ),
+                ),
+                //SizedBox(height: 1.0),
+                Divider(
+                  thickness: 0.5,
+                  color: Colors.lightBlueAccent,
+                ),
+                user != null
+                    ? Container(
+                  height: 50,
+                  //color: Colors.grey[800],
+                  child: ListTile(
+                      title: Row(
+                        children: <Widget>[
+                          Icon(
+                            Icons.person_pin,
+                            color: Colors.green[800],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.0),
+                            child: Text("Sign Out"),
+                          ),
+                        ],
+                      ),
+                      onTap: ()
+                      //      Navigator.pop(context);
+                      async {
+                        //signOut();
+                        // Navigator.pushNamed(context, '/LoginScreen');
+
+                        String _returnString =
+                        await _currentUser.signOut();
+                        if (_returnString == 'Success') {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => OurRoot()),
+                                (route) => false,
+                          );
+                        }
+                      }),
                 )
+                    : SizedBox.shrink(),
+              ],
+            ),
+          )
               : SizedBox.shrink(),
         ),
         body: GestureDetector(
