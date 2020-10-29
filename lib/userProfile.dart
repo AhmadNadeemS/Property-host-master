@@ -747,7 +747,7 @@ class _UserProfileState extends State<UserProfile> {
                                       child: Center(
                                         child: FlatButton(
                                           onPressed: () {
-                                            Navigator.pushNamed(context, '/AgentSignup');
+                                            Navigator.pushNamed(context, '/editProfile');
                                           },
                                           child: Container(
                                             height: 50,

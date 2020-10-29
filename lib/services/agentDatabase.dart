@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:signup/models/AgentUser.dart';
 
 class AgentDatabase{
   final Firestore _firestore = Firestore.instance;
-
   Future<String> ApplyForAgent(AgentUser user) async {
     String retVal = 'error';
     try {
@@ -12,9 +12,7 @@ class AgentDatabase{
         'Address': user.address,
         'description': user.description,
         'phoneNumber': user.phoneNumber,
-        'email': user.email,
-        'image':user.image,
-        //    'image':user.image,
+        'uid': user.uid,
         'User Type': "user",
 
         //    'accountCreated' : Timestamp.now(),

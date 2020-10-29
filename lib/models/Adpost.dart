@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 class AdPost {
+  String postId;
   String title;
       String desc;
   int price;
@@ -37,6 +38,7 @@ class AdPost {
 
 
       AdPost({
+        this.postId,
         this.title,
         this.desc,
         this.price,
