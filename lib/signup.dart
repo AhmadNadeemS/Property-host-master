@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:signup/states/currentUser.dart';
+import 'package:signup/widgets/otp_screen.dart';
 
 //import 'package:property_host_system/http_exception.dart';
 import './AppLogic/validation.dart';
@@ -64,7 +65,7 @@ class _LoginPageState extends State<SignUpPage> {
       String _returnString = await _currentUser.signUpUser(email, password,firstName,title,age,location,description,phoneNumber,role);
       if(_returnString == 'Success')
       {
-        Navigator.pushNamed(context, '/LoginScreen');
+        Navigator.pushNamed(context, '/OTPScreen');
       }
       else
       {
@@ -80,6 +81,16 @@ class _LoginPageState extends State<SignUpPage> {
       print(e);
     }
   }
+  Future<Null> validate(StateSetter updateState) async {
+    print("in validate : ${_phoneNumberController.text.length}");
+    if (_phoneNumberController.text.length == 10) {
+      updateState(() {
+        isValid = true;
+      });
+    }
+  }
+  final TextEditingController _phoneNumberController = TextEditingController();
+  bool isValid = false;
 //    catch (error) {
 //      // const errorMessage =
 //      //   'Could not authenticate you. Please try again later.';
@@ -134,145 +145,131 @@ class _LoginPageState extends State<SignUpPage> {
   }
 
   Widget _buildSignUpForm() {
-    return Form(
+    return StatefulBuilder(builder:
+        (BuildContext context, StateSetter state) {
+      return Form(
       key: _key,
       child: Padding(
-        padding: EdgeInsets.all(8),
-        child: Column(
-          children: <Widget>[
-            Container(
-              child: TextFormField(
-                controller: _firstName,
-                keyboardType: TextInputType.text,
-                validator: validateName,
-                onSaved: (String val){
-                  _FName = val;
-                  print(_FName);
-                },
-
-                decoration: InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.account_circle,
-                      color: Colors.grey[800],
-                    ),
-                    labelText: 'Enter Full Name'),
-              ),
-
-            ),
-            TextFormField(
-              controller: _phoneController,
-              keyboardType: TextInputType.phone,
-              maxLength: 11,
-              validator:validateMobile,
-              onSaved: (String val){
-                _phoneNumber = val;
-                print(_phoneNumber);
-              },
-              decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    Icons.phone,
-                    color: Colors.grey[800],
-                  ),
-                  labelText: 'Phone No'),
-            ),
-            TextFormField(
-              controller: _emailAddress,
-              keyboardType: TextInputType.emailAddress,
-              validator:validateEmail,
-              onSaved: (String val){
-                _email = val;
-              },
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.email,
-                  color: Colors.grey[800],
-                ),
-                labelText: 'Email',
-              ),
-            ),
-            TextFormField(
-              controller: _passwordTextController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.lock,
-                  color: Colors.grey[800],
-                ),
-                labelText: 'Password',
-              ),
-              obscureText: true,
-              // ignore: missing_return
-              validator: (String value) {
-                if (value.isEmpty || value.length < 6) {
-                  return 'Password invalid';
-                }
-              },
-              onSaved: (String value) {
-                _password = value;
-              },
-            ),
-            TextFormField(
-              controller: _confirmPasswordController,
-              decoration: InputDecoration(
-                prefixIcon: Icon(
-                  Icons.lock,
-                  color: Colors.grey[800],
-                ),
-                labelText: 'Confirm Password',
-              ),
-              obscureText: true,
-              // ignore: missing_return
-              validator: (String value) {
-                if (_passwordTextController.text != value) {
-                  return 'Passwords do not match.';
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-  Widget _buildLoginBtn() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
+      padding: EdgeInsets.all(8),
+      child: Column(
       children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(top: 2),
-          child: FlatButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/LoginScreen');
-            },
-            child: RichText(
-              text: TextSpan(children: [
-                TextSpan(
-                  text: 'Switch back to? ',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 40,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                TextSpan(
-                  text: 'Login In',
-                  style: TextStyle(
-                    color: Colors.grey[300],
-                    fontSize: MediaQuery
-                        .of(context)
-                        .size
-                        .height / 35,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
-              ]),
-            ),
-          ),
-        ),
+      Container(
+      child: TextFormField(
+      keyboardType: TextInputType.number,
+      controller: _phoneNumberController,
+      autofocus: false,
+      onChanged: (text) {
+      validate(state);
+      },
+      decoration: InputDecoration(
+      //labelText: "11 digit mobile number",
+      prefix: Container(
+      padding: EdgeInsets.all(4.0),
+      child: Text(
+      "+92",
+      style: TextStyle(
+      color: Colors.black,
+      fontWeight: FontWeight.bold),
+      ),
+      ),
+      ),
+      autovalidate: true,
+      autocorrect: false,
+      maxLengthEnforced: true,
+      validator: (value) {
+      return !isValid
+      ? 'Please provide a valid 11 digit phone number'
+          : null;
+      },
+      ),
+
+//      TextFormField(
+//      controller: _passwordTextController,
+//      decoration: InputDecoration(
+//      prefixIcon: Icon(
+//      Icons.lock,
+//      color: Colors.grey[800],
+//      ),
+//      labelText: 'Password',
+//      ),
+//      obscureText: true,
+//      // ignore: missing_return
+//      validator: (String value) {
+//      if (value.isEmpty || value.length < 6) {
+//      return 'Password invalid';
+//      }
+//      },
+//      onSaved: (String value) {
+//      _password = value;
+//      },
+//      ),
+//      TextFormField(
+//      controller: _confirmPasswordController,
+//      decoration: InputDecoration(
+//      prefixIcon: Icon(
+//      Icons.lock,
+//      color: Colors.grey[800],
+//      ),
+//      labelText: 'Confirm Password',
+//      ),
+//      obscureText: true,
+//      // ignore: missing_return
+//      validator: (String value) {
+//      if (_passwordTextController.text != value) {
+//      return 'Passwords do not match.';
+//      }
+//      },
+//      ),
+      ),
       ],
-    );
+      ),
+      ),
+      );
+
+      });
+
   }
+//  Widget _buildLoginBtn() {
+//    return Row(
+//      mainAxisAlignment: MainAxisAlignment.center,
+//      children: <Widget>[
+//        Padding(
+//          padding: EdgeInsets.only(top: 2),
+//          child: FlatButton(
+//            onPressed: () {
+//              Navigator.pushNamed(context, '/LoginScreen');
+//            },
+//            child: RichText(
+//              text: TextSpan(children: [
+//                TextSpan(
+//                  text: 'Switch back to? ',
+//                  style: TextStyle(
+//                    color: Colors.white,
+//                    fontSize: MediaQuery
+//                        .of(context)
+//                        .size
+//                        .height / 40,
+//                    fontWeight: FontWeight.w400,
+//                  ),
+//                ),
+//                TextSpan(
+//                  text: 'Login In',
+//                  style: TextStyle(
+//                    color: Colors.grey[300],
+//                    fontSize: MediaQuery
+//                        .of(context)
+//                        .size
+//                        .height / 35,
+//                    fontWeight: FontWeight.bold,
+//                  ),
+//                )
+//              ]),
+//            ),
+//          ),
+//        ),
+//      ],
+//    );
+//  }
 
   _sendToServer(){
     if (_key.currentState.validate()) {
@@ -313,18 +310,29 @@ class _LoginPageState extends State<SignUpPage> {
                 ),
 
                 onPressed: () {
-                  _sendToServer();
-                  
-                  if (_passwordTextController.text ==
-                      _confirmPasswordController.text) {
-                    _signUpUser(
+
+
+                  if (_phoneNumberController.text!=null)
+                  {
+                   /* _signUpUser(
                         _emailAddress.text, _passwordTextController.text,
                         context, _firstName.text,_title.text,_age.text,_location.text,_description.text
-                        ,_phoneController.text,_role.text);
-                  } else {
+                        ,_phoneNumberController.text,_role.text);*/
+                    Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            OTPScreen(
+                                                              mobileNumber:
+                                                              _phoneNumberController
+                                                                  .text,
+                                                            ),
+                                                      ));
+                                              }
+                                           else {
                     Scaffold.of(context).showSnackBar(
                       SnackBar(
-                        content: Text("Passwords do not match"),
+                        content: Text("Error"),
                         duration: Duration(seconds: 2),
                       ),
                     );
@@ -351,7 +359,7 @@ class _LoginPageState extends State<SignUpPage> {
 
 
                 child: Text(
-                  "Sign Up",
+                  "Continue",
                   style: TextStyle(
                     color: Colors.white,
                     letterSpacing: 1.5,
@@ -382,7 +390,7 @@ class _LoginPageState extends State<SignUpPage> {
             child: Container(
               margin: EdgeInsets.only(bottom: 20),
               //padding: EdgeInsets.only(bottom: 0),
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height * 0.5,
 
               width: MediaQuery.of(context).size.width * 0.8,
               decoration: BoxDecoration(
@@ -433,7 +441,7 @@ class _LoginPageState extends State<SignUpPage> {
           child: Stack(
             children: <Widget>[
               Container(
-                height: MediaQuery.of(context).size.height *1.3,
+                height: MediaQuery.of(context).size.height,
                 width: MediaQuery.of(context).size.width,
                 child: Container(
                   decoration: BoxDecoration(
@@ -446,7 +454,7 @@ class _LoginPageState extends State<SignUpPage> {
                 children: <Widget>[
                   _buildLogo(),
                   _buildContainer(),
-                  _buildLoginBtn(),
+              //    _buildLoginBtn(),
                 ],
               ),
             ],

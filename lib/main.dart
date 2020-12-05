@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:signup/AdsOnMap.dart';
 import 'package:signup/ImageCarousel.dart';
 import 'package:signup/MainScreenUsers.dart';
 import 'package:signup/MyProfileFinal.dart';
@@ -14,7 +15,9 @@ import 'package:signup/homeThree.dart';
 import 'package:signup/homeTwo.dart';
 import 'package:signup/main_screen.dart';
 import 'package:signup/myProfile.dart';
+import 'package:signup/screens/editProfile.dart';
 import 'package:signup/screens/postscreen1.dart';
+import 'package:signup/search_result.dart';
 import 'package:signup/states/currentUser.dart';
 import 'package:signup/userProfile.dart';
 import 'package:signup/viewPostAdds.dart';
@@ -43,10 +46,8 @@ class HomePage extends StatelessWidget {
           '/homeTwo': (context) => RoleCheckTwo(),
           '/homeThree': (context) => RoleCheckThree(),
           ActivityFeed.routeName: (context) => ActivityFeed(),
-          //'/myProfileFinal': (context) => MyProfileFinal(),
           MyProfileFinal.routeName: (ctx) => MyProfileFinal(),
           ImageCarousel.routeName: (ctx) => ImageCarousel(),
-          // Random.routeName: (ctx) => Random(),
           '/UserProfile': (context) => UserProfile(),
           '/mainScreen': (context) => MainScreen(),
           '/mainScreenUser': (context) => MainScreenUsers(),
@@ -54,10 +55,12 @@ class HomePage extends StatelessWidget {
           '/MyProfile': (context) => MyProfile(),
           '/Signup': (context) => SignUpPage(),
           '/ViewAdds': (context) => ViewAdds(),
-       //   '/PostDetail': (context) => PostDetail(),
           '/postscreen1': (context) => PostFirstScreen(),
           '/choseOnMap': (context) => ChoseOnMap(),
           '/AgentSignup': (context) => AgentSignUp(),
+          '/editProfile':(context) =>EditProfile(),
+          '/AdsOnMap':(context) =>AdsOnMap(),
+          '/search_result':(context) => SearcResult(),
           '/ForgetPassword': (context) => ForgetPassword(),
           '/ImageCarousel': (context) => ImageCarousel(),
           '/AgentSignup': (context) => AgentSignUp(),

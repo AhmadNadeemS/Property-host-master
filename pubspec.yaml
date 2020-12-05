@@ -40,11 +40,17 @@ dependencies:
   timeago: ^2.0.27
   rxdart:
   flutter_map:
+  mapbox_gl: ^0.9.0
+  location: ^3.0.2
   latlong: ^0.6.1
+  map_controller: ^0.8.0
+  geocoder: ^0.2.1
   carousel_pro: ^1.0.0
   font_awesome_flutter:
+  fluttertoast: ^3.1.3
   nice_button: ^0.1.7
   shared_preferences: ^0.5.6+3
+  universal_html: ^1.2.3
 
 
 

@@ -49,6 +49,7 @@ class CurrentUser extends ChangeNotifier{
     return retVal;
   }
 
+
   Future<String> onStartUp() async{
     String retVal = "error";
     try{

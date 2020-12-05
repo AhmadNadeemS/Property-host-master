@@ -16,7 +16,7 @@ class PostAddFirebase{
       "Price": adPost.price,
       "Image Urls": adPost.ImageUrls,
       "Address": {"Street":adPost. Address, "city": adPost.City},
-    //  "Location":location,
+      "Location":adPost.location,
       "Available Days":adPost. AvailDays,
       "Purpose":adPost. purpose,
       "Property Type":adPost. propertyType,
@@ -276,6 +276,10 @@ class PostAddFirebase{
       "email": firebaseUser.email,
       "uid": firebaseUser.uid,
     });
+  }
+
+ getCordinatesOfAds() async{
+    return await firestoreInstance.collection("PostAdd").snapshots();
   }
 
 }

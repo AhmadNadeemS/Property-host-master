@@ -5,12 +5,14 @@ import 'package:provider/provider.dart';
 import 'package:signup/home.dart';
 import 'package:signup/main_screen.dart';
 import 'package:signup/states/currentUser.dart';
+import 'package:signup/widgets/otp_screen.dart';
 
 import './AppLogic/validation.dart';
 
 enum LoginType{
   email,
   google,
+  PhoneNo,
 }
 class LoginPage extends StatefulWidget {
   final AuthResult authResult;
@@ -41,7 +43,10 @@ class _LoginPageState extends State<LoginPage> {
           _returnString = await _currentUser.loginUserWithEmail(email, password, context);
           break;
         case LoginType.google:
-          _returnString = await _currentUser.loginUserWithGoogle();
+        //  _returnString = await _currentUser.loginUserWithGoogle();
+          break;
+        case LoginType.PhoneNo:
+          _returnString ="" ;
           break;
         default:
       }
@@ -91,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
             Padding(
               padding: const EdgeInsets.only(left: 10),
               child: Text(
-                'Sign in with Google',
+                'Sign in with Number',
                 style: TextStyle(
                   fontSize: 20,
                   color: Colors.grey,

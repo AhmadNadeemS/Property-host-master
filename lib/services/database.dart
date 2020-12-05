@@ -14,12 +14,14 @@ class OurDatabase{
       await _firestore.collection('users').document(user.uid).setData({
         'displayName' : user.displayName,
         'phoneNumber' : user.phoneNumber,
-        'email' : user.email,
-        'uid': user.uid,
+        'uid':user.uid,
+      //  'email' : user.email,
         'avatarUrl':data,
         'User Type' : "user",
         'accountCreated' : Timestamp.now(),
+
       });
+      print("success new user added in firebase!");
       retVal='Success';
     }
     catch(e)
